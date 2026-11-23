@@ -171,3 +171,19 @@ body {
     border-radius: 12px;
   }
 }
+
+.empty-state {
+  background-color: var(--surface);
+  border: 1px dashed #cbd5e1;
+  border-radius: 14px;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.empty-title {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
