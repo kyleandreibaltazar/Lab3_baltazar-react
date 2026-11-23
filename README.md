@@ -1,20 +1,16 @@
-# DCIT26 - Laboratory Exercise 3: React Props and Component Communication
+## Lab 4: Guide Questions (useState & useEffect)
 
-A Mini Product Catalog built with React and Vite demonstrating props, destructuring, default prop values, callback props, conditional rendering, and list rendering.
+1. **Why do we use two separate states, `searchText` and `debouncedSearch`, instead of only one?**
+   `searchText` updates immediately on every keystroke so the controlled input stays responsive to the user's typing, while `debouncedSearch` updates only after the user pauses typing, preventing expensive filtering or API calls on every single character.
 
-## Guide Questions
+2. **What would happen if the debounce effect did not return a cleanup function?**
+   Every keystroke would schedule a separate 300ms timer that never gets canceled. Instead of waiting for a single pause, `debouncedSearch` would still update repeatedly for every single keystroke just delayed by 300ms.
 
-1. **What is the difference between props and state?**
-   Props (properties) are read-only inputs passed from a parent component to a child component to configure it. State is mutable data managed internally within a component that triggers a re-render when updated.
+3. **What is the purpose of the dependency array? What happens if it is empty (`[]`)? What happens if it is left out completely?**
+   The dependency array tells React which reactive values should trigger the effect to re-run when they change. If it is empty (`[]`), the effect runs only once when the component mounts; if it is omitted completely, the effect runs after every single render.
 
-2. **Why can a child component not modify the props it receives?**
-   React enforces unidirectional (one-way) data flow where props are immutable inside the child. This keeps data predictable and ensures only the parent component that owns the data can change it.
+4. **Why should we avoid sorting the original `products` array directly?**
+   JavaScript's `.sort()` mutates the array in place. Mutating imported or shared source data directly breaks React's immutability rules, permanently alters the default ordering, and can cause unpredictable bugs when resetting filters.
 
-3. **How does the `onAddToCart` callback allow data to flow from child to parent even though props only flow downward?**
-   The parent defines a function and passes a reference to that function downward as a prop. When an event occurs in the child (such as clicking the button), the child invokes that function and passes arguments (like the product title) back up to the parent's scope.
-
-4. **Why is the `key` prop required when rendering a list with `.map()`? What could happen if it is missing or duplicated?**
-   The `key` prop helps React uniquely identify which list items were added, changed, or removed during re-renders. If keys are missing or duplicated, React may improperly reuse DOM elements, leading to UI glitches, mismatched component states, or degraded rendering performance.
-
-5. **What does the `children` prop allow you to do that a normal prop does not?**
-   The `children` prop lets you pass arbitrary JSX elements, HTML tags, or nested components directly between a component's opening and closing tags, making wrapper and container components much more flexible than passing plain strings or numbers via standard attributes.
+5. **Is the filtered product list better stored in its own state, or calculated from existing state during rendering? Explain your choice.**
+   It is better calculated directly during rendering as derived data. Storing it in separate state creates redundant state that requires extra `useEffect` synchronization and risks becoming out of sync with `debouncedSearch`, `category`, or `sortOrder`.
